@@ -5,7 +5,7 @@ import api from '../../services/api';
 
 import logoImage from '../../assets/logo.svg';
 
-import { Title, Form, Repositories } from './styles';
+import { Title, Form, Repositories, Error } from './styles';
 
 interface Repository {
     full_name: string;
@@ -18,6 +18,7 @@ interface Repository {
 
 const Dashboard: React.FC = () => {
     const [newRepo, setNewRepo] = useState('');
+    const [inputError, setInputError] = useState('');
     const [repositories, setRepositories] = useState<Repository[]>([]);
 
     async function handleAddRepository(
@@ -25,39 +26,48 @@ const Dashboard: React.FC = () => {
     ): Promise<void> {
         event.preventDefault();
 
-        const response = await api.get<Repository>(`repos/${newRepo}`);
-        // console.log(response.data);
-        const repository = response.data;
-        setRepositories([...repositories, repository]);
-        setNewRepo('');
+        if (!newRepo) {
+            setInputError('Type user/repo, i.e., facebook/react');
+            return;
+        }
+
+        try {
+            const response = await api.get<Repository>(`repos/${newRepo}`);
+            // console.log(response.data);
+            const repository = response.data;
+            setRepositories([...repositories, repository]);
+            setNewRepo('');
+            setInputError('');
+        } catch (err) {
+            setInputError(
+                'Repository not found. Try another one. Format: user/repo,  i.e. facebook/react'
+            );
+        }
     }
 
     return (
         <>
             <img src={logoImage} alt="GitHubExplorer" />
             <Title>Dashboard!</Title>
-
-            <Form onSubmit={handleAddRepository}>
+            <Form hasError={!!inputError} onSubmit={handleAddRepository}>
                 <input
-                  value={newRepo}
+                    value={newRepo}
                     onChange={(e) => setNewRepo(e.target.value)}
                     placeholder="Type here"
                 />
                 <button type="submit">Search</button>
             </Form>
+            {inputError && <Error>{inputError}</Error>}
             <Repositories>
                 {repositories.map((repository) => (
                     <a key={repository.full_name} href="teste">
                         <img
                             src={repository.owner.avatar_url}
-                          alt={repository.owner.login}
+                            alt={repository.owner.login}
                         />
                         <div>
                             <strong>{repository.full_name}</strong>
-                            <p>
-{repository.description}
-{' '}
- </p>
+                            <p>{repository.description}</p>
                         </div>
                         <FiChevronRight size={20} />
                     </a>
