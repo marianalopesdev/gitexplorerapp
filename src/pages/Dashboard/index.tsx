@@ -66,12 +66,12 @@ const Dashboard: React.FC = () => {
     return (
         <>
             <img src={logoImage} alt="GitHubExplorer" />
-            <Title>Dashboard!</Title>
+            <Title>Explore GitHub repositories!</Title>
             <Form hasError={!!inputError} onSubmit={handleAddRepository}>
                 <input
-                    value={newRepo}
-                    onChange={(e) => setNewRepo(e.target.value)}
-                    placeholder="Type here"
+                  value={newRepo}
+                  onChange={(e) => setNewRepo(e.target.value)}
+                  placeholder="Type here"
                 />
                 <button type="submit">Search</button>
             </Form>
@@ -79,12 +79,12 @@ const Dashboard: React.FC = () => {
             <Repositories>
                 {repositories.map((repository) => (
                     <Link
-                        key={repository.full_name}
-                        to={`/repositories/${repository.full_name}`}
+                      key={repository.full_name}
+                      to={`/repositories/${repository.full_name}`}
                     >
                         <img
-                            src={repository.owner.avatar_url}
-                            alt={repository.owner.login}
+                          src={repository.owner.avatar_url}
+                          alt={repository.owner.login}
                         />
                         <div>
                             <strong>{repository.full_name}</strong>

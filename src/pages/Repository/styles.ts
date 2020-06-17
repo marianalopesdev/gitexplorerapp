@@ -70,7 +70,7 @@ export const RepositoryInfo = styled.section`
     }
 `;
 
-export const Issues = styled.div`
+export const Issue = styled.div`
     margin-top: 80px;
 
     a {
